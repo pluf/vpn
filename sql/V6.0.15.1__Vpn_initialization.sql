@@ -14,4 +14,4 @@ CREATE TABLE `vpn_account_limits` (
 ALTER TABLE `vpn_account_limits` 
    ADD CONSTRAINT `fk__account_of_vpn_limit` 
    FOREIGN KEY (`account_id`) 
-   REFERENCES `user_account` (`id`);
+   REFERENCES `user_accounts` (`id`);
