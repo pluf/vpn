@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit 
+	bootstrap="./vendor/autoload.php"
+	stopOnWarning="false"
+	verbose="false"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	colors="true">
+    <testsuites>
+        <testsuite name="Shop">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    
+	<!-- Code coverage -->
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./src</directory>
+			<directory suffix=".php">./src6</directory>
+		</whitelist>
+	</filter>
+    <logging>
+<!-- 		<log  -->
+<!-- 			type="coverage-html"  -->
+<!-- 			target="build/tmp/report"  -->
+<!-- 			lowUpperBound="35" highLowerBound="70"/> -->
+		<log 
+			type="coverage-clover" 
+			target="build/logs/clover.xml"/>
+		<log 
+			type="junit" 
+			target="build/log/junit.xml"/>
+    </logging>
+</phpunit>
