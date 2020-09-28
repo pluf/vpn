@@ -1,0 +1,77 @@
+{
+	"name" : "pluf/vpn",
+	"version" : "6.0.12",
+	"description" : "Simple VPN management",
+	"type" : "library",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Mostafa Barmshory",
+			"email" : "mostafa.barmshory@dpq.co.ir",
+			"homepage" : "http://dpq.co.ir",
+			"role" : "developer"
+		}, {
+			"name" : "Mohammad Hadi Mansouri",
+			"email" : "mohammad.hadi.mansouri@dpq.co.ir",
+			"homepage" : "http://dpq.co.ir",
+			"role" : "developer"
+		}
+	],
+	"minimum-stability" : "stable",
+	"require" : {
+		"pluf/core" : "6.x",
+		"pluf/tenant" : "6.x"
+	},
+	"require-dev" : {
+		"pluf/test" : "6.x"
+	},
+	"homepage" : "https://github.com/pluf/vpn",
+	"support" : {
+		"email" : "info@pluf.ir",
+		"issues" : "https://github.com/pluf/vpn/issues",
+		"wiki" : "https://github.com/pluf/vpn/wiki",
+		"source" : "https://github.com/pluf/vpn"
+	},
+	"keywords" : [
+		"pluf",
+		"vpn"
+	],
+	"include-path" : [
+		"src/"
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Pluf\\Shop\\" : "src6"
+		},
+		"psr-0" : {
+			"" : "src"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"Pluf\\Test\\" : "tests"
+		}
+	},
+	"repositories~" : [{
+			"type" : "path",
+			"url" : "../core",
+			"name" : "pluf/core",
+			"options" : {
+				"symlink" : true
+			}
+		}, {
+			"type" : "path",
+			"url" : "../test",
+			"name" : "pluf/test",
+			"options" : {
+				"symlink" : true
+			}
+		}, {
+			"type" : "path",
+			"url" : "../tenant",
+			"name" : "pluf/tenant",
+			"options" : {
+				"symlink" : true
+			}
+		}
+	]
+}

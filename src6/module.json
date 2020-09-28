@@ -1,0 +1,13 @@
+{
+	"name": "Vpn",
+	"version": "6.0.13",
+	"title": "Simple VPN management",
+	"model": [
+		"Vpn_Account",
+		"Vpn_AccountLimit"
+	],
+	"init": {
+		"User_Role": [],
+		"Monitor_Metric": [	]
+	}
+}
