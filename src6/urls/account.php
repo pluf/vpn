@@ -18,7 +18,7 @@ return array(
         'http-method' => 'GET',
         'params' => array(
             'model' => 'Vpn_Account',
-            'sql' => new Pluf_SQL('deleted=false')
+            'sql' => 'is_deleted=false'
         )
     ),
     array( // Create

@@ -29,7 +29,7 @@ class Vpn_Views_Account extends Pluf_Views
     private function downloadOvpnFile($account)
     {
         // TODO: genrate ovpn file and return it
-        $filePath = Pluf::f('upload_path') . '/' . $this->tenant->id . '/vpn/sample-ovpn';
+        $filePath = Pluf_Tenant::storagePath() . '/' . $this->tenant->id . '/vpn/sample-ovpn';
         $response = new Pluf_HTTP_Response_File($filePath, 'application/ovpn');
         // $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $content->file_name);
         return $response;
