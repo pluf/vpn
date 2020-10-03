@@ -7,8 +7,8 @@ class Vpn_Views_Account extends Pluf_Views
     public function get($request, $match)
     {
         // Extract order id
-        $contentType = array_key_exists('Content-Type', $request->HEADERS) ? $request->HEADERS['Content-Type'] : null;
-        if ($contentType === 'application/ovpn') {
+        $acceptType = array_key_exists('Accept', $request->HEADERS) ? $request->HEADERS['Accept'] : null;
+        if ($acceptType === 'application/ovpn') {
             // TODO: return ovpn file
             return $this->downloadOvpnFile(new Vpn_Account($match['modelId']));
         } else {
