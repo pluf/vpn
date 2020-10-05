@@ -1,7 +1,8 @@
 <?php
 $paths = array(
     'urls/account.php',
-    'urls/account_limits.php'
+    'urls/account_limits.php',
+    'urls/server.php'
 );
 
 $vpnApi = array();
