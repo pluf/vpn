@@ -47,8 +47,9 @@ class Vpn_AccountLimit extends Pluf_Model
                 'editable' => true
             ),
             'value' => array(
-                'type' => 'Text',
+                'type' => 'Varchar',
                 'is_null' => true,
+                'size' => 256,
                 'default' => '',
                 'editable' => true
             ),
