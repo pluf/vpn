@@ -1,6 +1,6 @@
 {
 	"name" : "pluf/vpn",
-	"version" : "6.0.15",
+	"version" : "6.0.16",
 	"description" : "Simple VPN management",
 	"type" : "library",
 	"license" : "MIT",
