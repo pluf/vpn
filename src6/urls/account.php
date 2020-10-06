@@ -23,15 +23,10 @@ return array(
     ),
     array( // Create
         'regex' => '#^/accounts$#',
-        'model' => 'Pluf_Views',
-        'method' => 'createObject',
+        'model' => 'Vpn_Views_Account',
+        'method' => 'createAccount',
         'http-method' => 'POST',
-        'precond' => array(
-            'User_Precondition::ownerRequired'
-        ),
-        'params' => array(
-            'model' => 'Vpn_Account'
-        )
+        'precond' => array()
     ),
     array( // Read
         'regex' => '#^/accounts/(?P<modelId>\d+)$#',

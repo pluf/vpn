@@ -1,5 +1,4 @@
 <?php
-Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 
 class Vpn_Views_AccountLimit extends Pluf_Views
 {
