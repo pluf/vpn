@@ -25,17 +25,18 @@ class Vpn_Views_Account extends Pluf_Views
 
     public function get($request, $match)
     {
-        // Extract order id
+        $account = Vpn_Util::extractAccountOr404($request, $match);
+        // Extract accept type
         $acceptType = array_key_exists('Accept', $request->HEADERS) ? $request->HEADERS['Accept'] : null;
         if ($acceptType === 'application/ovpn') {
             // TODO: return ovpn file
-            return $this->downloadOvpnFile(new Vpn_Account($match['modelId']));
-        } else {
-            $param = array(
-                'model' => 'Vpn_Account'
-            );
-            return $this->getObject($request, $match, $param);
+            return $this->downloadOvpnFile($account);
         }
+        $param = array(
+            'model' => 'Vpn_Account'
+        );
+        $match['modelId'] = $account->id;
+        return $this->getObject($request, $match, $param);
     }
 
     /**

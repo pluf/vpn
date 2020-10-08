@@ -33,6 +33,8 @@ class Vpn_Views_AccountLimit extends Pluf_Views
      */
     public static function getByKey($request, $match)
     {
+        $account = Vpn_Util::extractAccountOr404($request, $match);
+        $match['parentId'] = $account->id;
         if (! isset($match['modelKey'])) {
             throw new Pluf_Exception_BadRequest('The modelKey is not set');
         }
@@ -43,7 +45,7 @@ class Vpn_Views_AccountLimit extends Pluf_Views
         return $limit;
     }
 
-    public static function updateByKey($request, $match)
+    public function updateByKey($request, $match)
     {
         $limit = self::getByKey($request, $match);
         $match['modelId'] = $limit->id;
@@ -53,9 +55,53 @@ class Vpn_Views_AccountLimit extends Pluf_Views
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
         );
-        $view = new Pluf_Views();
-        return $view->updateManyToOne($request, $match, $p);
+        return $this->updateManyToOne($request, $match, $p);
     }
 
+    
+    public function create($request, $match, $param){
+        $account = Vpn_Util::extractAccountOr404($request, $match);
+        $match['parentId'] = $account->id;
+        $myParams = array_merge(array(
+            'parent' => 'Vpn_Account',
+            'parentKey' => 'account_id',
+            'model' => 'Vpn_AccountLimit'
+        ), $param);
+        return $this->createManyToOne($request, $match, $myParams);
+    }
+    
+    public function get($request, $match, $param){
+        $account = Vpn_Util::extractAccountOr404($request, $match);
+        $match['parentId'] = $account->id;
+        $myParams = array_merge(array(
+            'parent' => 'Vpn_Account',
+            'parentKey' => 'account_id',
+            'model' => 'Vpn_AccountLimit'
+        ), $param);
+        return $this->getManyToOne($request, $match, $myParams);
+    }
+    
+    public function find($request, $match, $param){
+        $account = Vpn_Util::extractAccountOr404($request, $match);
+        $match['parentId'] = $account->id;
+        $myParams = array_merge(array(
+            'parent' => 'Vpn_Account',
+            'parentKey' => 'account_id',
+            'model' => 'Vpn_AccountLimit'
+        ), $param);
+        return $this->findManyToOne($request, $match, $myParams);
+    }
+    
+    public function delete($request, $match, $param){
+        $account = Vpn_Util::extractAccountOr404($request, $match);
+        $match['parentId'] = $account->id;
+        $myParams = array_merge(array(
+            'parent' => 'Vpn_Account',
+            'parentKey' => 'account_id',
+            'model' => 'Vpn_AccountLimit'
+        ), $param);
+        return $this->deleteManyToOne($request, $match, $myParams);
+    }
+    
 }
 

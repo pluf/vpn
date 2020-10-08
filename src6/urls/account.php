@@ -11,16 +11,6 @@ return array(
         )
     ),
     // ************************************************************* Account
-    array( // Read (list)
-        'regex' => '#^/accounts$#',
-        'model' => 'Pluf_Views',
-        'method' => 'findObject',
-        'http-method' => 'GET',
-        'params' => array(
-            'model' => 'Vpn_Account',
-            'sql' => 'is_deleted=false'
-        )
-    ),
     array( // Create
         'regex' => '#^/accounts$#',
         'model' => 'Vpn_Views_Account',
@@ -34,6 +24,16 @@ return array(
         'method' => 'get',
         'http-method' => 'GET'
     ),
+    array( // Read (list)
+        'regex' => '#^/accounts$#',
+        'model' => 'Pluf_Views',
+        'method' => 'findObject',
+        'http-method' => 'GET',
+        'params' => array(
+            'model' => 'Vpn_Account',
+            'sql' => 'is_deleted=false'
+        )
+    ),
     array( // Delete
         'regex' => '#^/accounts/(?P<modelId>\d+)$#',
         'model' => 'Pluf_Views',
@@ -45,7 +45,7 @@ return array(
             'permanently' => false
         )
     ),
-    array( // Update 
+    array( // Update
         'regex' => '#^/accounts/(?P<modelId>\d+)$#',
         'model' => 'Pluf_Views',
         'method' => 'updateObject',
@@ -54,5 +54,12 @@ return array(
         'params' => array(
             'model' => 'Vpn_Account'
         )
+    ),
+    // ************************************************************* Account (by login of the account)
+    array( // Read
+        'regex' => '#^/accounts/(?P<login>[^/]+)$#',
+        'model' => 'Vpn_Views_Account',
+        'method' => 'get',
+        'http-method' => 'GET'
     )
 );
