@@ -77,4 +77,28 @@ class Vpn_AccountLimit extends Pluf_Model
         );
         
     }
+    
+    /**
+     * Extract information of a limit and returns it.
+     *
+     * @param string $key
+     * @param int $accountId
+     * @return Vpn_AccountLimit
+     */
+    public static function getLimit($key, $accountId)
+    {
+        $model = new Vpn_AccountLimit();
+        $where = new Pluf_SQL('`key`=%s AND `account_id`=%s', array(
+            $model->_toDb($key, 'key'),
+            $model->_toDb($accountId, 'account_id')
+        ));
+        $limit = $model->getList(array(
+            'filter' => $where->gen()
+        ));
+        if ($limit === false or count($limit) !== 1) {
+            return false;
+        }
+        return $limit[0];
+    }
+    
 }

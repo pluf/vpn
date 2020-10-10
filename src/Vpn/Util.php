@@ -26,7 +26,7 @@ class Vpn_Util
 {
     public static function extractAccountOr404($request, $match){
         $account = array_key_exists('login', $match) ? //
-            Vpn_Account::getAccount($match['login']) : new Vpn_Account($match['modelId']);
+            Vpn_Account::getAccount($match['login']) : new Vpn_Account($match['parentId']);
             if($account && $account->id > 0){
                 return $account;
             }

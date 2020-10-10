@@ -11,17 +11,23 @@ return array(
         )
     ),
     // ************************************************************* AccountLimit
-    array( // Create
+    array( // Create (error if item is existed)
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits$#',
         'model' => 'Pluf_Views',
         'method' => 'createManyToOne',
-        'http-method' => 'POST',
+        'http-method' => 'PUT',
         'params' => array(
             'parent' => 'Vpn_Account',
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
             // 'precond' => function($request, $object, $parent) -> {false, true} | throw exception
         )
+    ),
+    array( // Create (update if item is existed)
+        'regex' => '#^/accounts/(?P<parentId>\d+)/limits$#',
+        'model' => 'Vpn_Views_AccountLimit',
+        'method' => 'createOrUpdate',
+        'http-method' => 'POST'
     ),
     array( // Read (list)
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits$#',
@@ -85,10 +91,16 @@ return array(
         )
     ),
     // ************************************************************* AccountLimit (by login of the account)
-    array( // Create
+    array( // Create (error if item is existed)
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'create',
+        'http-method' => 'PUT'
+    ),
+    array( // Create (update if item is existed)
+        'regex' => '#^/accounts/(?P<login>[^/]+)/limits$#',
+        'model' => 'Vpn_Views_AccountLimit',
+        'method' => 'createOrUpdate',
         'http-method' => 'POST'
     ),
     array( // Read (list)
