@@ -55,7 +55,13 @@ class Vpn_Views_AccountLimit extends Pluf_Views
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
         );
-        return $this->updateManyToOne($request, $match, $p);
+        $limit = $this->updateManyToOne($request, $match, $p);
+        // Generate new certificate for user
+        if($limit->key === 'expire'){
+            $account = $limit->get_account();
+            Vpn_Cert::revokeAll($account);
+            Vpn_Cert::generate($account, [$limit->key => $limit->value]);
+        }
     }
 
     public function create($request, $match, $param)
@@ -67,7 +73,13 @@ class Vpn_Views_AccountLimit extends Pluf_Views
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
         ), $param);
-        return $this->createManyToOne($request, $match, $myParams);
+        $limit = $this->createManyToOne($request, $match, $myParams);
+        // Generate new certificate for user
+        if($limit->key === 'expire'){
+            Vpn_Cert::revokeAll($account);
+            Vpn_Cert::generate($account, [$limit->key => $limit->value]);
+        }
+        return $limit;
     }
 
     public function createOrUpdate($request, $match, $param)

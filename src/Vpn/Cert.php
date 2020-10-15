@@ -89,30 +89,28 @@ class Vpn_Cert extends Pluf_Model
             "commonName" => $account->login
         );
         $kp = Vpn_Keypair::getOne($account);
+        $kp = $kp == null ? Vpn_Keypair::generate($account) : $kp;
         $privRes = openssl_pkey_get_private($kp->private_pem);
         $csrConfig = [
             // FIXME: client cert configuration
         ];
+        $datetime = array_key_exists('expire', $params) ? new DateTime($params['expire']) : (new DateTime())->add(new DateInterval('PT5M'));
         $csrExtraattribs = [
             // 'enddate' => $datetime->format('YYMMDDHHMMSSZ')
         ];
         $csr = openssl_csr_new($dn, $privRes, $csrConfig, $csrExtraattribs);
         
-        
         //----------------------- CERT --------------------
         // FIXME: expiry must be replaced with datetime
         $caCert = Vpn_Cert::getDefaultCa();
         $caCertRes = openssl_x509_read($caCert->pem);
-        $caPrivRes = null;
-//         $datetime = new DateTime();
-//         $datetime->add(new DateInterval('PT5M'));
+        $caKp = Vpn_Keypair::getDefaultCaKeypair();
+        $caPrivRes = openssl_pkey_get_private($caKp->private_pem);
         $cert = openssl_csr_sign($csr, $caCertRes, $caPrivRes, 1);
-        
         
         //----------------------- Save --------------------
         $certPem = null;
         openssl_x509_export($cert, $certPem);
-        
         $certObj = new Vpn_Cert();
         $certObj->account_id = $account->id;
         $certObj->pem = $certPem;

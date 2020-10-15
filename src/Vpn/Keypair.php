@@ -65,23 +65,23 @@ class Vpn_Keypair extends Pluf_Model
     public static function generate(Vpn_Account $account): Vpn_Keypair
     {
         // Create the keypair
-        $res=openssl_pkey_new();
-        if($res === false){
+        $res = openssl_pkey_new();
+        if ($res === false) {
             throw new \Pluf\Exception('Error: Faile to generate keypair.');
         }
         // Get private key
         $privkey = '';
         openssl_pkey_export($res, $privkey);
         // Get public key
-        $pubkey=openssl_pkey_get_details($res);
-        $pubkey=$pubkey["key"];
-        
+        $pubkey = openssl_pkey_get_details($res);
+        $pubkey = $pubkey["key"];
+
         $keypair = new Vpn_Keypair();
         $keypair->private_pem = $privkey;
         $keypair->public_pem = $pubkey;
         $keypair->account_id = $account;
         $kp = $keypair->create();
-        if(!$kp){
+        if (! $kp) {
             return new \Pluf\Exception('Error: Faile to store keypair.');
         }
         return $kp;
@@ -96,7 +96,7 @@ class Vpn_Keypair extends Pluf_Model
         return $kp->getList($params);
     }
 
-    public static function getOne(Vpn_Account $account): Vpn_Cert
+    public static function getOne(Vpn_Account $account): Vpn_Keypair
     {
         $items = self::getAll($account);
         if ($items->count() == 1) {
@@ -108,4 +108,6 @@ class Vpn_Keypair extends Pluf_Model
         throw new \Pluf\Exception(__('Error: More than one keypair found for the account.'));
     }
 
+    public static function getDefaultCaKeypair(): Vpn_Keypair
+    {}
 }
