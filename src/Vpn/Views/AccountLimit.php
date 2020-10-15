@@ -83,10 +83,16 @@ class Vpn_Views_AccountLimit extends Pluf_Views
         ), $param);
 
         if (! $limit) {
-            return $this->createManyToOne($request, $match, $myParams);
+            $limit = $this->createManyToOne($request, $match, $myParams);
         }
         $match['modelId'] = $limit->id;
-        return $this->updateManyToOne($request, $match, $myParams);
+        $limit = $this->updateManyToOne($request, $match, $myParams);
+        // Generate new certificate for user
+        if($limit->key === 'expire'){
+            Vpn_Cert::revokeAll($account);
+            Vpn_Cert::generate($account, [$limit->key => $limit->value]);
+        }
+        return $limit;
     }
 
     public function get($request, $match, $param)
@@ -124,5 +130,7 @@ class Vpn_Views_AccountLimit extends Pluf_Views
         ), $param);
         return $this->deleteManyToOne($request, $match, $myParams);
     }
+
+    
 }
 
