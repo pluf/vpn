@@ -51,7 +51,7 @@ Cert
 --
 - pem: String
 - is_revoked: Boolean
-- expired_dtime: Datetime</panel_attributes>
+- expire_dtime: Datetime</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -119,7 +119,7 @@ m2=1</panel_attributes>
     <panel_attributes>bg=blue
 now the only limit is: 
 	{
-	key: expired, 
+	key: expire, 
 	value: unix datetime
 	}</panel_attributes>
     <additional_attributes/>
