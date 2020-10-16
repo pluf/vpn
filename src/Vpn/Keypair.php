@@ -104,7 +104,15 @@ class Vpn_Keypair extends Pluf_Model
     public static function getDefaultCaKeypair(): Vpn_Keypair
     {
         $filePath = Pluf_Tenant::storagePath() . '/vpn/ca_key.pem';
-        $keyRes = openssl_pkey_get_private("file://$filePath");
+        $content = Vpn_Util::getFileContent($filePath);
+        $keyRes = openssl_pkey_get_private($content, '123456');
+        if(!$keyRes){
+            $errMsg = openssl_error_string();
+            while($msg = openssl_error_string()){
+                $errMsg = "$errMsg\n$msg";
+            }
+            throw new \Pluf\Exception($errMsg);
+        }
         $fakeKeyObj = self::fromOpensslKey($keyRes);
         return $fakeKeyObj;
     }

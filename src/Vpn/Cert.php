@@ -93,31 +93,40 @@ class Vpn_Cert extends Pluf_Model
         $privRes = openssl_pkey_get_private($kp->private_pem);
         $csrConfig = [ // FIXME: client cert configuration
         ];
-        $datetime = array_key_exists('expire', $params) ? new DateTime($params['expire']) : (new DateTime())->add(new DateInterval('PT5M'));
+        $datetime = new DateTime();
+        $datetime = array_key_exists('expire', $params) ? //
+            $datetime->add(new DateInterval('PT' . $params['expire'] . 'S')) : //
+            $datetime->add(new DateInterval('PT5M'));
         $csrExtraattribs = [ // 'enddate' => $datetime->format('YYMMDDHHMMSSZ')
         ];
-        $csr = openssl_csr_new($dn, $privRes, $csrConfig, $csrExtraattribs);
-
-        // ----------------------- CERT --------------------
-        // FIXME: expiry must be replaced with datetime
+        $csr = openssl_csr_new($dn, $privRes); // , $csrConfig, $csrExtraattribs);
+                                               // ----------------------- CERT --------------------
+                                               // FIXME: expiry must be replaced with datetime
         $caCert = Vpn_Cert::getDefaultCa();
         $caCertRes = openssl_x509_read($caCert->pem);
         $caKp = Vpn_Keypair::getDefaultCaKeypair();
         $caPrivRes = openssl_pkey_get_private($caKp->private_pem);
         $cert = openssl_csr_sign($csr, $caCertRes, $caPrivRes, 1);
+        if (! $cert) {
+            $errMsg = openssl_error_string();
+            while ($msg = openssl_error_string()) {
+                $errMsg = "$errMsg\n$msg";
+            }
+            throw new \Pluf\Exception($errMsg);
+        }
 
         // ----------------------- Save --------------------
         $certPem = null;
         openssl_x509_export($cert, $certPem);
         $certObj = new Vpn_Cert();
-        $certObj->account_id = $account->id;
+        $certObj->account_id = $account;
         $certObj->pem = $certPem;
-        $certObj->expire_dtime = $datetime;
+        $certObj->expire_dtime = $datetime->format('Y-m-d H:i:s');
         $certObj->create();
         return $certObj;
     }
 
-    public static function revokeAll(Vpn_Account $account, array $param): bool
+    public static function revokeAll(Vpn_Account $account)
     {
         $certList = self::getValidCerts($account);
         foreach ($certList as $c) {
@@ -129,7 +138,7 @@ class Vpn_Cert extends Pluf_Model
     public static function getValidCerts(Vpn_Account $account): ArrayObject
     {
         $params = [
-            'filter' => "account_id=$account->id AND expire_dtime > CURRENT_TIMESTAMP()"
+            'filter' => "account_id=$account->id AND expire_dtime > CURRENT_TIMESTAMP() AND is_revoked=false"
         ];
         $cert = new Vpn_Cert();
         return $cert->getList($params);
