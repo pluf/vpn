@@ -65,7 +65,10 @@ class Vpn_Keypair extends Pluf_Model
     public static function generate(Vpn_Account $account): Vpn_Keypair
     {
         // Create the keypair
-        $res = openssl_pkey_new();
+        $configargs = [
+            // FIXME: client cert configuration
+        ];
+        $res = openssl_pkey_new($configargs);
         if ($res === false) {
             throw new \Pluf\Exception('Error: Faile to generate keypair.');
         }
@@ -109,5 +112,7 @@ class Vpn_Keypair extends Pluf_Model
     }
 
     public static function getDefaultCaKeypair(): Vpn_Keypair
-    {}
+    {
+        // TODO: return default CA keypair
+    }
 }

@@ -19,7 +19,8 @@
 	"minimum-stability" : "stable",
 	"require" : {
 		"pluf/core" : "6.x",
-		"pluf/tenant" : "6.x"
+		"pluf/tenant" : "6.x",
+		"mustache/mustache" : "2.12.x"
 	},
 	"require-dev" : {
 		"pluf/test" : "6.x"
