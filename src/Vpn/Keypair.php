@@ -77,28 +77,28 @@ class Vpn_Keypair extends Pluf_Model
         if (! $kp) {
             return new \Pluf\Exception('Error: Faile to store keypair.');
         }
-        return $kp;
+        return $keypair;
     }
 
-    public static function getAll(Vpn_Account $account): ArrayObject
+    public static function getAllKeypairs(Vpn_Account $account): ArrayObject
     {
         $params = [
-            'filter' => new Pluf_SQL("account_id=$account->id")
+            'filter' => "account_id=$account->id"
         ];
         $kp = new Vpn_Keypair();
         return $kp->getList($params);
     }
 
-    public static function getOne(Vpn_Account $account): Vpn_Keypair
+    public static function getOneKeypair(Vpn_Account $account)
     {
-        $items = self::getAll($account);
+        $items = self::getAllKeypairs($account);
         if ($items->count() == 1) {
             return $items[0];
         }
         if ($items->count() == 0) {
             return null;
         }
-        throw new \Pluf\Exception(__('Error: More than one keypair found for the account.'));
+        throw new \Pluf\Exception('Error: More than one keypair found for the account.');
     }
 
     public static function getDefaultCaKeypair(): Vpn_Keypair

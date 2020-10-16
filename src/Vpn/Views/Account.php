@@ -63,10 +63,16 @@ class Vpn_Views_Account extends Pluf_Views
     private static function generateClientOvpn($account){
         $filePath = Pluf_Tenant::storagePath() . '/vpn/client-template.ovpn'; 
         $template = Vpn_Util::getFileContent($filePath);
+        $key = Vpn_Keypair::getOneKeypair($account);
+        $key = $key ? $key : Vpn_Keypair::generate($account);
+        $cert = Vpn_Cert::getOneValidCert($account);
+        // TODO: set expire dtime (5 min) in the param
+        $cert = $cert ? $cert : Vpn_Cert::generate($account, []);
+        $caCert = Vpn_Cert::getDefaultCa();
         $context = [
-            'key' => Vpn_Keypair::getOne($account)->private_pem,
-            'cert' => Vpn_Cert::getOneValidCert($account)->pem,
-            'ca' => Vpn_Cert::getDefaultCa()->pem
+            'key' => $key->private_pem,
+            'cert' => $cert->pem,
+            'ca' => $caCert->pem
         ];
         // Replace account specific data
         $m = new Mustache_Engine();

@@ -66,7 +66,7 @@ class Vpn_Cert extends Pluf_Model
                 'relate_name' => 'certs',
                 'is_null' => true,
                 'editable' => true
-            ),
+            )
         );
 
         $this->_a['idx'] = array(
@@ -83,32 +83,30 @@ class Vpn_Cert extends Pluf_Model
 
     public static function generate(Vpn_Account $account, array $params): Vpn_Cert
     {
-        //----------------------- CSR --------------------
+        // ----------------------- CSR --------------------
         $dn = array(
             "organizationName" => "VPNex",
             "commonName" => $account->login
         );
-        $kp = Vpn_Keypair::getOne($account);
+        $kp = Vpn_Keypair::getOneKeypair($account);
         $kp = $kp == null ? Vpn_Keypair::generate($account) : $kp;
         $privRes = openssl_pkey_get_private($kp->private_pem);
-        $csrConfig = [
-            // FIXME: client cert configuration
+        $csrConfig = [ // FIXME: client cert configuration
         ];
         $datetime = array_key_exists('expire', $params) ? new DateTime($params['expire']) : (new DateTime())->add(new DateInterval('PT5M'));
-        $csrExtraattribs = [
-            // 'enddate' => $datetime->format('YYMMDDHHMMSSZ')
+        $csrExtraattribs = [ // 'enddate' => $datetime->format('YYMMDDHHMMSSZ')
         ];
         $csr = openssl_csr_new($dn, $privRes, $csrConfig, $csrExtraattribs);
-        
-        //----------------------- CERT --------------------
+
+        // ----------------------- CERT --------------------
         // FIXME: expiry must be replaced with datetime
         $caCert = Vpn_Cert::getDefaultCa();
         $caCertRes = openssl_x509_read($caCert->pem);
         $caKp = Vpn_Keypair::getDefaultCaKeypair();
         $caPrivRes = openssl_pkey_get_private($caKp->private_pem);
         $cert = openssl_csr_sign($csr, $caCertRes, $caPrivRes, 1);
-        
-        //----------------------- Save --------------------
+
+        // ----------------------- Save --------------------
         $certPem = null;
         openssl_x509_export($cert, $certPem);
         $certObj = new Vpn_Cert();
@@ -122,32 +120,35 @@ class Vpn_Cert extends Pluf_Model
     public static function revokeAll(Vpn_Account $account, array $param): bool
     {
         $certList = self::getValidCerts($account);
-        foreach ($certList as $c){
+        foreach ($certList as $c) {
             $c->is_revoked = true;
             $c->update();
         }
     }
-    
-    public static function getValidCerts(Vpn_Account $account) : ArrayObject{
+
+    public static function getValidCerts(Vpn_Account $account): ArrayObject
+    {
         $params = [
-            'filter' => new Pluf_SQL("account_id=$account->id AND exipre_dtime > CURRENT_TIMESTAMP()")
+            'filter' => "account_id=$account->id AND expire_dtime > CURRENT_TIMESTAMP()"
         ];
         $cert = new Vpn_Cert();
         return $cert->getList($params);
     }
-    
-    public static function getOneValidCert(Vpn_Account $account) : Vpn_Cert{
-        $items = self::getOneValidCert($account);
+
+    public static function getOneValidCert(Vpn_Account $account)
+    {
+        $items = self::getValidCerts($account);
         if ($items->count() == 1) {
             return $items[0];
         }
         if ($items->count() == 0) {
             return null;
         }
-        throw new \Pluf\Exception(__('Error: More than one certificates found.'));
+        throw new \Pluf\Exception('Error: More than one certificates found.');
     }
-    
-    public static function getDefaultCa(){
+
+    public static function getDefaultCa()
+    {
         // returns default CA
         $filePath = Pluf_Tenant::storagePath() . '/vpn/ca_cert.pem';
         $caPem = Vpn_Util::getFileContent($filePath);
@@ -155,5 +156,4 @@ class Vpn_Cert extends Pluf_Model
         $fakeCertObj->pem = $caPem;
         return $fakeCertObj;
     }
-    
 }
