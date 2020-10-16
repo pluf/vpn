@@ -20,16 +20,32 @@
 
 /**
  * Utility class
- *
  */
 class Vpn_Util
 {
-    public static function extractAccountOr404($request, $match){
+
+    public static function extractAccountOr404($request, $match)
+    {
         $account = array_key_exists('login', $match) ? //
-            Vpn_Account::getAccount($match['login']) : new Vpn_Account($match['parentId']);
-            if($account && $account->id > 0){
-                return $account;
-            }
-            throw new Pluf_Exception_DoesNotExist('Account not found!');
+        Vpn_Account::getAccount($match['login']) : new Vpn_Account($match['parentId']);
+        if ($account && $account->id > 0) {
+            return $account;
+        }
+        throw new Pluf_Exception_DoesNotExist('Account not found!');
+    }
+
+    /**
+     * Reads and returns the content of the given file as a string.
+     * This method opens the file as a readonly file and closes it at the end.
+     *
+     * @param string $filePath
+     * @return string
+     */
+    public static function getFileContent(string $filePath): string
+    {
+        $myfile = fopen($filePath, "r") or die("Unable to open file! [$filePath]");
+        $content = fread($myfile, filesize($filePath));
+        fclose($myfile);
+        return $content;
     }
 }

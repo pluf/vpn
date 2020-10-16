@@ -16,9 +16,13 @@ class Vpn_Views_Account extends Pluf_Views
         // Genereate account data
         $acceptType = array_key_exists('Accept', $request->HEADERS) ? $request->HEADERS['Accept'] : null;
         if ($acceptType === 'application/ovpn') {
-            return self::downloadOvpnFile($account);
+            // return self::downloadOvpnFile($account);
+            $ovpnStr = self::generateClientOvpn($account);
+            return new Pluf_HTTP_Response_PlainText($ovpnStr, 'application/ovpn');
         } else if ($acceptType === 'application/ikv2') {
-            return self::downloadOvpnFile($account);
+            // FIXME: Generate IKEV2 config file
+            $ovpnStr = self::generateClientOvpn($account);
+            return new Pluf_HTTP_Response_PlainText($ovpnStr, 'application/ovpn');
         }
         return $account;
     }
@@ -29,7 +33,6 @@ class Vpn_Views_Account extends Pluf_Views
         // Extract accept type
         $acceptType = array_key_exists('Accept', $request->HEADERS) ? $request->HEADERS['Accept'] : null;
         if ($acceptType === 'application/ovpn') {
-            // TODO: return ovpn file
             // return self::downloadOvpnFile($account);
             $ovpnStr = self::generateClientOvpn($account);
             return new Pluf_HTTP_Response_PlainText($ovpnStr, 'application/ovpn');
@@ -41,32 +44,25 @@ class Vpn_Views_Account extends Pluf_Views
         return $this->getObject($request, $match, $param);
     }
 
-    /**
-     * Download the ovpn file related to give vpn-account
-     *
-     * @param Pluf_HTTP_Request $request
-     * @param array $match
-     * @return Pluf_HTTP_Response_File
-     */
-    private static function downloadOvpnFile($account)
-    {
-        // TODO: genrate ovpn file and return it
-        $filePath = Pluf_Tenant::storagePath() . '/vpn/sample-ovpn';
-        $response = new Pluf_HTTP_Response_File($filePath, 'application/ovpn');
-        // $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $content->file_name);
-        return $response;
-    }
-    
-    private static function getOvpnTemplate(){
-        $filePath = Pluf_Tenant::storagePath() . '/vpn/client-template.ovpn';        
-        $myfile = fopen($filePath, "r") or die("Unable to open client template file!");
-        $template = fread($myfile,filesize("webdictionary.txt"));
-        fclose($myfile);
-        return $template;
-    }
+//     /**
+//      * Download the ovpn file related to give vpn-account
+//      *
+//      * @param Pluf_HTTP_Request $request
+//      * @param array $match
+//      * @return Pluf_HTTP_Response_File
+//      */
+//     private static function downloadOvpnFile($account)
+//     {
+//         // TODO: genrate ovpn file and return it
+//         $filePath = Pluf_Tenant::storagePath() . '/vpn/sample-ovpn';
+//         $response = new Pluf_HTTP_Response_File($filePath, 'application/ovpn');
+//         // $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $content->file_name);
+//         return $response;
+//     }
     
     private static function generateClientOvpn($account){
-        $template = self::getOvpnTemplate();
+        $filePath = Pluf_Tenant::storagePath() . '/vpn/client-template.ovpn'; 
+        $template = Vpn_Util::getFileContent($filePath);
         $context = [
             'key' => Vpn_Keypair::getOne($account)->private_pem,
             'cert' => Vpn_Cert::getOneValidCert($account)->pem,

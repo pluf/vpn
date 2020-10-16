@@ -148,7 +148,12 @@ class Vpn_Cert extends Pluf_Model
     }
     
     public static function getDefaultCa(){
-        // returns default CA 
+        // returns default CA
+        $filePath = Pluf_Tenant::storagePath() . '/vpn/ca_cert.pem';
+        $caPem = Vpn_Util::getFileContent($filePath);
+        $fakeCertObj = new Vpn_Cert();
+        $fakeCertObj->pem = $caPem;
+        return $fakeCertObj;
     }
     
 }
