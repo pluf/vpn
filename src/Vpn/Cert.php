@@ -95,7 +95,7 @@ class Vpn_Cert extends Pluf_Model
         ];
         $datetime = new DateTime();
         $datetime = array_key_exists('expire', $params) ? //
-            $datetime->add(new DateInterval('PT' . $params['expire'] . 'S')) : //
+            $datetime->setTimestamp($params['expire']) : //
             $datetime->add(new DateInterval('PT5M'));
         $csrExtraattribs = [ // 'enddate' => $datetime->format('YYMMDDHHMMSSZ')
         ];
@@ -106,7 +106,8 @@ class Vpn_Cert extends Pluf_Model
         $caCertRes = openssl_x509_read($caCert->pem);
         $caKp = Vpn_Keypair::getDefaultCaKeypair();
         $caPrivRes = openssl_pkey_get_private($caKp->private_pem);
-        $cert = openssl_csr_sign($csr, $caCertRes, $caPrivRes, 1);
+        $seconds = $datetime->getTimestamp() - date_timestamp_get(new DateTime());
+        $cert = openssl_csr_sign($csr, $caCertRes, $caPrivRes, $seconds);
         if (! $cert) {
             $errMsg = openssl_error_string();
             while ($msg = openssl_error_string()) {
