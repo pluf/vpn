@@ -16,13 +16,18 @@ return array(
         'model' => 'Vpn_Views_Account',
         'method' => 'createAccount',
         'http-method' => 'POST',
-        'precond' => array()
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Read
         'regex' => '#^/accounts/(?P<modelId>\d+)$#',
         'model' => 'Vpn_Views_Account',
         'method' => 'get',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Read (list)
         'regex' => '#^/accounts$#',
@@ -32,6 +37,9 @@ return array(
         'params' => array(
             'model' => 'Vpn_Account',
             'sql' => 'is_deleted=false'
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Delete
@@ -39,10 +47,12 @@ return array(
         'model' => 'Pluf_Views',
         'method' => 'deleteObject',
         'http-method' => 'DELETE',
-        'precond' => array(),
         'params' => array(
             'model' => 'Vpn_Account',
             'permanently' => false
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Update
@@ -50,9 +60,11 @@ return array(
         'model' => 'Pluf_Views',
         'method' => 'updateObject',
         'http-method' => 'POST',
-        'precond' => array(),
         'params' => array(
             'model' => 'Vpn_Account'
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     // ************************************************************* Account (by login of the account)
@@ -60,6 +72,9 @@ return array(
         'regex' => '#^/accounts/(?P<login>[^/]+)$#',
         'model' => 'Vpn_Views_Account',
         'method' => 'get',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     )
 );

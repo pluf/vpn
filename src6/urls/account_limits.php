@@ -21,13 +21,19 @@ return array(
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
             // 'precond' => function($request, $object, $parent) -> {false, true} | throw exception
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Create (update if item is existed)
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'createOrUpdate',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Read (list)
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits$#',
@@ -38,6 +44,9 @@ return array(
             'parent' => 'Vpn_Account',
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Read
@@ -49,13 +58,19 @@ return array(
             'parent' => 'Vpn_Account',
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Read (by key)
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits/(?P<modelKey>[^/]+)$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'getByKey',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Update
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits/(?P<modelId>\d+)$#',
@@ -70,13 +85,19 @@ return array(
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
             // 'precond' => function($request, $object, $parent) -> {false, true} | throw exception
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Update (by key)
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits/(?P<modelKey>[^/]+)$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'updateByKey',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Delete
         'regex' => '#^/accounts/(?P<parentId>\d+)/limits/(?P<modelId>\d+)$#',
@@ -88,6 +109,9 @@ return array(
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
             // 'precond' => function($request, $object, $parent) -> {false, true} | throw exception
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     // ************************************************************* AccountLimit (by login of the account)
@@ -95,31 +119,46 @@ return array(
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'create',
-        'http-method' => 'PUT'
+        'http-method' => 'PUT',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Create (update if item is existed)
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'createOrUpdate',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Read (list)
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'find',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Read
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits/(?P<modelId>\d+)$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'get',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Read (by key)
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits/(?P<modelKey>[^/]+)$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'getByKey',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Update
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits/(?P<modelId>\d+)$#',
@@ -134,18 +173,27 @@ return array(
             'parentKey' => 'account_id',
             'model' => 'Vpn_AccountLimit'
             // 'precond' => function($request, $object, $parent) -> {false, true} | throw exception
+        ),
+        'precond' => array(
+            'User_Precondition::loginRequired'
         )
     ),
     array( // Update (by key)
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits/(?P<modelKey>[^/]+)$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'updateByKey',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     ),
     array( // Delete
         'regex' => '#^/accounts/(?P<login>[^/]+)/limits/(?P<modelId>\d+)$#',
         'model' => 'Vpn_Views_AccountLimit',
         'method' => 'delete',
-        'http-method' => 'DELETE'
+        'http-method' => 'DELETE',
+        'precond' => array(
+            'User_Precondition::loginRequired'
+        )
     )
 );
