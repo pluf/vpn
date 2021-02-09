@@ -105,7 +105,7 @@ class Vpn_Keypair extends Pluf_Model
     {
         $filePath = Pluf_Tenant::storagePath() . '/vpn/ca_key.pem';
         $content = Vpn_Util::getFileContent($filePath);
-        $keyRes = openssl_pkey_get_private($content, '123456');
+        $keyRes = openssl_pkey_get_private($content, Tenant_Service::setting('vpn.privateKey.password', '123456'));
         if(!$keyRes){
             $errMsg = openssl_error_string();
             while($msg = openssl_error_string()){
